@@ -14,8 +14,8 @@ I have spent only around 2 hours on it (Of course, it takes like five minutes fo
 
 You should run it using console. The syntax of the command is as follows: 
   <ul>
-    <li>For Encryption: "java [main] [e] [png_file_path]"</li>
-    <li>For Decrypion: "java [main] [e] [encrypted.txt_file_path]"
+    <li>For Encryption: "java [Main] [e] [png_file_path]"</li>
+    <li>For Decrypion: "java [Main] [d] [encrypted.txt_file_path]"
   </ul>
 
 A few screen shots of how the commands look like are shown below. Before looking at the command, I will discuss what and how the files are generated. When you use the commnd (as shown above) to encrypt a .png file and enter the password, the program will generate a file called "encrypted.txt" in the root directory (where your classes are run). Because it's encrypted, of course you cannot open the txt like a image.
