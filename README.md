@@ -8,7 +8,7 @@ I want to make it a program that can encrypt any kind of files or data. It is ba
 
 <h1> Current Issues </h1>
 
-I have spent only around 2 hours on it (Of course, it takes like five minutes for some people. I know!) from design to implementation. So, it can only encrypt/decrypt image files (even though it does allow you to enter file name extension). I will add more functionalities to it for sure. 
+It can only encrypt/decrypt image files (even though it does allow you to enter file name extension). I will add more functionalities to it for sure. 
 
 <h1> How to use it? </h1>
 
