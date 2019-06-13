@@ -1,8 +1,10 @@
 package encryption;
 
-public interface Encryptable<E> {
+import java.io.IOException;
 
-    public void encrypt();
+public interface Encryptable {
 
-    public void decrypt();
+    public void encrypt() throws IOException;
+
+    
 }

@@ -1,5 +1,4 @@
 
-
 import java.io.Console;
 import java.io.IOException;
 
@@ -23,6 +22,7 @@ public class Main {
 	try {
 	    String operation = args[0];
 	    String filePath = args[1];
+	    String fileNameExtention = args[2];
 
 	    // password for encryption or decryption
 	    System.out.println("Enter password");
@@ -30,13 +30,24 @@ public class Main {
 
 	    switch (operation) {
 	    case ENCRYPTION:
-		ImgEncryp imgEncryp = new ImgEncryp(filePath, password, ImgEncryp.Command.ENCRYPT);
-		imgEncryp.encrypt();
+		ImgEncryp imgEncryp = new ImgEncryp(filePath, password, fileNameExtention, ImgEncryp.Command.ENCRYPT);
+		try {
+		    imgEncryp.encrypt();
+		} catch (IOException e1) {
+		    System.out.println("Fail to writed encrypted data.");
+		    System.exit(0);
+		}
 		break;
 
 	    case DECRYPTION:
-		ImgEncryp imgDecryp = new ImgEncryp(filePath, password, ImgEncryp.Command.DECRYPT);
-		imgDecryp.decrypt();
+		ImgEncryp imgDecryp = new ImgEncryp(filePath, password, fileNameExtention, ImgEncryp.Command.DECRYPT);
+		try {
+		    imgDecryp.decrypt();
+		} catch (IOException e2) {
+		    System.out.println("Fail to writed decrypted data.");
+		    System.exit(0);
+		}
+
 		break;
 	    default:
 		System.out.println(
@@ -47,16 +58,14 @@ public class Main {
 	    }
 
 	} catch (ArrayIndexOutOfBoundsException e) {
-	    System.out.println("You did not enter the path of the file that you want to encrypt/decrypt.");
+	    System.out.println("Incomplete Command");
 	    System.exit(0);
 	} catch (IOException e) {
 	    System.out.println("File not exists");
 	    System.exit(0);
 	}
-
 	System.out.println("Done.");
 	System.exit(0);
-
     }
 
 }
