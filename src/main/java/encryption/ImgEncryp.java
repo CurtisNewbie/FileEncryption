@@ -135,11 +135,11 @@ public class ImgEncryp implements Encryptable, Decryptable {
 
     /**
      * Decrypt the file, using predefined algorithm. Once the decryption is
-     * finished, it will generate a file called "output.txt" which contains the
-     * encrypted data in forms of bytes.
+     * finished, it will generate a file called "output.[givenFileNameExtension]"
+     * which is the one that is previously encrypted.
      * 
      * @throws IOException it throws IOEexception when this class fails to create
-     *                     the "encrypted.txt" file.
+     *                     the "output.[fileNameExtension]" file.
      */
     @Override
     public void decrypt() throws IOException {
