@@ -38,6 +38,7 @@ public class ImgDecryp extends ImageCryptoSpec implements Decryptable {
 	int sizeOfData = (int) (file.length() - salt.length);
 	imageByte = new byte[sizeOfData];
 	inputStream.read(imageByte);
+	inputStream.close();
 
 	// Create PBE parameter specification
 	pbeParam = new PBEParameterSpec(salt, PARAM_ITERATION_COUNT);
