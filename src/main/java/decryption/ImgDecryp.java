@@ -1,6 +1,7 @@
 package decryption;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,7 +30,7 @@ public class ImgDecryp extends ImageCryptoSpec implements Decryptable {
 	
 	// get the encrypted data/bytes
 	File file = new File(filePath);
-	FileInputStream inputStream = new FileInputStream(file);
+	BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(file));
 
 	// read the salt
 	inputStream.read(salt);

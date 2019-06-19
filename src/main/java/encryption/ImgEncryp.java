@@ -1,6 +1,7 @@
 package encryption;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -69,7 +70,8 @@ public class ImgEncryp extends ImageCryptoSpec implements Encryptable {
 	    cipher.init(Cipher.ENCRYPT_MODE, key, pbeParam);
 
 	    // put the salt first into the outputs
-	    FileOutputStream encryptedOutputStream = new FileOutputStream(new File("encrypted.txt"));
+	    BufferedOutputStream encryptedOutputStream = new BufferedOutputStream(
+		    new FileOutputStream("encrypted.txt"));
 	    encryptedOutputStream.write(salt);
 
 	    // encrypted the data and write the data.
