@@ -2,6 +2,7 @@
 import java.io.Console;
 import java.io.IOException;
 
+import decryption.ImgDecryp;
 import encryption.ImgEncryp;
 
 /**
@@ -30,21 +31,21 @@ public class Main {
 
 	    switch (operation) {
 	    case ENCRYPTION:
-		ImgEncryp imgEncryp = new ImgEncryp(filePath, password, fileNameExtention, ImgEncryp.Command.ENCRYPT);
+		ImgEncryp imgEncryp = new ImgEncryp(filePath, password, fileNameExtention);
 		try {
 		    imgEncryp.encrypt();
 		} catch (IOException e1) {
-		    System.out.println("Fail to writed encrypted data.");
+		    System.out.println("Fail to write encrypted data.");
 		    System.exit(0);
 		}
 		break;
 
 	    case DECRYPTION:
-		ImgEncryp imgDecryp = new ImgEncryp(filePath, password, fileNameExtention, ImgEncryp.Command.DECRYPT);
+		ImgDecryp imgDecryp = new ImgDecryp(filePath, password, fileNameExtention);
 		try {
 		    imgDecryp.decrypt();
 		} catch (IOException e2) {
-		    System.out.println("Fail to writed decrypted data.");
+		    System.out.println("Fail to write decrypted data.");
 		    System.exit(0);
 		}
 

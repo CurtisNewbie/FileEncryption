@@ -1,43 +1,25 @@
 package encryption;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Random;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 import javax.imageio.ImageIO;
 
-public class ImgEncryp implements Encryptable, Decryptable {
+import cryptoSpec.ImageCryptoSpec;
 
-    private static final String ALGORITHM = "PBEWithMD5AndTripleDES";
-    private final int PARAM_ITERATION_COUNT = 100;
-
-    private byte[] imageByte;
-    private SecretKey key;
-    private byte[] salt;
-    private Cipher cipher;
-    private PBEParameterSpec pbeParam;
-    private String fileNameExtension;
-
-    public enum Command {
-	ENCRYPT, DECRYPT
-    }
+public class ImgEncryp extends ImageCryptoSpec implements Encryptable {
 
     /**
      * 
@@ -50,52 +32,27 @@ public class ImgEncryp implements Encryptable, Decryptable {
      * @throws IOException it throws IOException when this class fails to read the
      *                     file.
      */
-    public ImgEncryp(String filePath, char[] password, String fileNameExtension, Command com) throws IOException {
+    public ImgEncryp(String filePath, char[] password, String fileNameExtension) throws IOException {
 	setupKey(password);
 	salt = new byte[8];
 	this.fileNameExtension = fileNameExtension;
 
-	// For encryption
-	if (com == Command.ENCRYPT) {
+	// get the image
+	BufferedImage image = ImageIO.read(new File(filePath));
+	this.imageByte = imageToByte(image, this.fileNameExtension);
 
-	    // get the image
-	    BufferedImage image = ImageIO.read(new File(filePath));
-	    this.imageByte = imageToByte(image, this.fileNameExtension);
+	// Randomly generate byte[8] (salt).
+	new Random().nextBytes(salt);
 
-	    // Randomly generate byte[8] (salt).
-	    new Random().nextBytes(salt);
+	// Create PBE parameter specification
+	pbeParam = new PBEParameterSpec(salt, PARAM_ITERATION_COUNT);
 
-	    // Create PBE parameter specification
-	    pbeParam = new PBEParameterSpec(salt, PARAM_ITERATION_COUNT);
-
-	    // Create cipher for encryption
-	    try {
-		cipher = Cipher.getInstance(ALGORITHM);
-	    } catch (NoSuchAlgorithmException | NoSuchPaddingException e1) {
-	    }
-	} else { // Command.DECRYPT
-
-	    // get the encrypted data/bytes
-	    File file = new File(filePath);
-	    FileInputStream inputStream = new FileInputStream(file);
-
-	    // read the salt
-	    inputStream.read(salt);
-
-	    // read encrypted data
-	    int sizeOfData = (int) (file.length() - salt.length);
-	    imageByte = new byte[sizeOfData];
-	    inputStream.read(imageByte);
-
-	    // Create PBE parameter specification
-	    pbeParam = new PBEParameterSpec(salt, PARAM_ITERATION_COUNT);
-
-	    // Create cipher for decryption
-	    try {
-		cipher = Cipher.getInstance(ALGORITHM);
-	    } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-	    }
+	// Create cipher for encryption
+	try {
+	    cipher = Cipher.getInstance(ALGORITHM);
+	} catch (NoSuchAlgorithmException | NoSuchPaddingException e1) {
 	}
+
     }
 
     /**
@@ -130,60 +87,6 @@ public class ImgEncryp implements Encryptable, Decryptable {
 	    System.out.println("Invalid key, wrong data length and so on. Exiting...");
 	    System.exit(0);
 	} catch (InvalidAlgorithmParameterException e) {
-	}
-    }
-
-    /**
-     * Decrypt the file, using predefined algorithm. Once the decryption is
-     * finished, it will generate a file called "output.[givenFileNameExtension]"
-     * which is the one that is previously encrypted.
-     * 
-     * @throws IOException it throws IOEexception when this class fails to create
-     *                     the "output.[fileNameExtension]" file.
-     */
-    @Override
-    public void decrypt() throws IOException {
-	try {
-	    cipher.init(Cipher.DECRYPT_MODE, key, pbeParam);
-
-	    try {
-		// convert the decrypted data back to image
-		byte[] originalData = cipher.doFinal(imageByte);
-		ByteArrayInputStream byteIn = new ByteArrayInputStream(originalData);
-		BufferedImage originalImage = ImageIO.read(byteIn);
-		ImageIO.write(originalImage, fileNameExtension, new File("output." + fileNameExtension));
-	    } catch (IllegalBlockSizeException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	    } catch (BadPaddingException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	    }
-	} catch (InvalidKeyException e) {
-	    System.out.println("Invalid key, wrong data length and so on. Exiting...");
-	    System.exit(0);
-	} catch (InvalidAlgorithmParameterException e) {
-	}
-    }
-
-    /**
-     * Generate SecretKey based on the given password and predefined algorithm.
-     * 
-     * @param password char[] of password
-     */
-    private void setupKey(char[] password) {
-	// Generate PBE key object.
-	PBEKeySpec pbeKeySpec = new PBEKeySpec(password);
-
-	// Create secret Key factory based on the specified algorithm
-	try {
-	    SecretKeyFactory skFactory = SecretKeyFactory.getInstance(ALGORITHM);
-	    // Generate the key based on the given password
-	    this.key = skFactory.generateSecret(pbeKeySpec);
-	} catch (NoSuchAlgorithmException e) {
-	    System.out.println("Algorithm error");
-	    System.exit(0);
-	} catch (InvalidKeySpecException e) {
 	}
     }
 
